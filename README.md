@@ -63,14 +63,14 @@
 * `GET /products` — получить список
 * `POST /products` — создать
 * `GET /products/:id` — получить по ID
-* `PUT /products/:id` — обновить
+* `PUT /products/:id` — обновить услугу
 * `DELETE /products/:id` — удалить
 
 ---
 
 # Описание проекта
 
-Будем делать сервис "Склад". Каждый товар имеет:
+Будем делать сервис "Магазин". Каждый товар имеет:
 
 * `id`: number
 * `name`: string
@@ -84,24 +84,40 @@
 
 # Установка и структура проекта
 
+Продолжим разработку в старом проекте, но изменим структуру:
+
 ```bash
-npm i -g @nestjs/cli
-nest new stock-service
-cd stock-service
+mkdir -p src/modules/services/dto 
+mkdir -p src/modules/services/interfaces 
+mkdir -p src/modules/services/repositories
+```
+Создаем папку для сущностей (если нет):
+
+```bash
+mkdir -p src/entities
 ```
 
 Структура:
 
 ```
-src/
-  modules/
-    products/
-      products.controller.ts
-      products.service.ts
-      products.module.ts
-      dto/
-      entities/
-      repository/
+src/ 
+├── modules/ 
+│   └── products/                          # Модуль товаров 
+│       ├── products.controller.ts         # REST API КОНТРОЛЛЕР (главный файл API) 
+│       ├── products.service.ts            # Бизнес-логика 
+│       ├── products.module.ts             # Модуль 
+│       ├── dto/                           # DTO для валидации 
+│       │   ├── create-product.dto.ts 
+│       │   ├── update-product.dto.ts 
+│       │   └── product-filters.dto.ts 
+│       └── repositories/                  # Репозиторий для работы с БД 
+│           └── typeorm-products.repository.ts 
+│ 
+├── entities/                              # Сущности БД 
+│   ├── product.entity.ts                  # Сущность товара 
+│   └── order.entity.ts                    # Сущность заказа 
+│ 
+└── app.module.ts, main.ts                 # Конфигурация приложения 
 ```
 
 ---
