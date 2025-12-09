@@ -1,4 +1,4 @@
-# 📘 Методичка по разработке CRUD‑сервиса на **NestJS + TypeORM**
+# Методичка по разработке CRUD‑сервиса на **NestJS + TypeORM**
 
 Добро пожаловать! Эта методичка шаг за шагом проведёт тебя через создание полноценного CRUD‑сервиса на NestJS с использованием PostgreSQL, TypeORM, DTO, валидации, пайплайна, репозиториев и тестирования в Postman.
 
@@ -6,7 +6,7 @@
 
 ---
 
-# 📑 Оглавление
+# Оглавление
 
 1. [Введение](#введение)
 2. [Что такое API и REST](#что-такое-api-и-rest)
@@ -22,10 +22,7 @@
 12. [Типовые ответы сервера](#типовые-ответы-сервера)
 13. [Postman/Insomnia — тестирование API](#postmaninsomnia--тестирование-api)
 14. [Ошибки, коды ответов и плохие кейсы](#ошибки-коды-ответов-и-плохие-кейсы)
-15. [Swagger — автодокументация API](#swagger--автодокументация-api)
-16. [Критерии оценки проекта](#критерии-оценки-проекта)
-17. [Контрольные вопросы](#контрольные-вопросы)
-18. [Полезные ссылки](#полезные-ссылки)
+15. [Полезные ссылки](#полезные-ссылки)
 
 ---
 
@@ -48,7 +45,6 @@
 * **TypeORM** (Entities + Repository)
 * **class-validator + class-transformer** (валидация)
 * **DTO**
-* **Swagger**
 
 ---
 
@@ -83,7 +79,6 @@
 * `quantity`: number
 * `createdAt`: datetime
 
-> Добавь картинку ER‑диаграммы, если хочешь.
 
 ---
 
@@ -332,58 +327,10 @@ app.useGlobalPipes(new ValidationPipe({
 
 ---
 
-# Swagger — автодокументация API
-
-```ts
-const config = new DocumentBuilder()
-  .setTitle('Products API')
-  .setVersion('1.0')
-  .build();
-
-const document = SwaggerModule.createDocument(app, config);
-SwaggerModule.setup('api', app, document);
-```
-
-После запуска:
-
-```
-http://localhost:3000/api
-```
-
----
-
-# Критерии оценки проекта
-
-* корректная структура NestJS
-* рабочий CRUD
-* валидация DTO
-* корректные ответы сервера
-* Postman коллекция
-* чистый и читаемый код
-* наличие Swagger
-
----
-
-# Контрольные вопросы
-
-1. Что такое DTO и зачем он нужен?
-2. Что такое Entity и как работает TypeORM?
-3. Чем отличается сервис от контроллера?
-4. Что такое DI (Dependency Injection)?
-5. Что делает ValidationPipe?
-6. Отличие `PUT` от `PATCH`?
-
----
-
 # Полезные ссылки
 
 * [https://nestjs.com](https://nestjs.com)
 * [https://typeorm.io](https://typeorm.io)
 * [https://www.postman.com](https://www.postman.com)
-* [https://swagger.io](https://swagger.io)
 
 ---
-
-# 🎉 Готово!
-
-Теперь у тебя есть красиво оформленный README для GitHub, останется только вставить изображения, скриншоты и UML‑диаграммы.
