@@ -614,7 +614,7 @@ bootstrap();
 
 ## 12. Тестирование GET в Postman
 1. Поднимете docker контейнер командой docker compose up
-
+   ![](https://github.com/thePontific/Method-lab3/blob/main/images/1.png)
 
 2. Проверьте, что PostgreSQL и MinIo в состоянии listening
 3. Запустите ваш проект: npm run start:dev
@@ -1600,7 +1600,7 @@ Body:
 
     Нажмите "Select Files" и выберите любое изображение (jpg, png и т.д.)
 
-## 16. Итоговая структура проекта
+## 17. Итоговая структура проекта
 ```text
 bmstu-lab/
 ├── src/
