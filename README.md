@@ -1600,7 +1600,7 @@ Body:
     Нажмите "Select Files" и выберите любое изображение (jpg, png и т.д.)
 
 ## 16. Итоговая структура проекта
-
+```text
 bmstu-lab/
 ├── src/
 │   ├── entities/
@@ -1625,3 +1625,4 @@ bmstu-lab/
 ├── docker-compose.yml
 ├── init.sql
 └── .env
+```
