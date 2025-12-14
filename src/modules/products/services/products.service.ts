@@ -1,9 +1,9 @@
 import { Injectable, NotFoundException, BadRequestException, InternalServerErrorException } from '@nestjs/common';
-import { TypeORMProductsRepository } from './repositories/typeorm-products.repository';
-import { ProductResponseDto } from './dto/product-response.dto';
-import { CreateProductDto } from './dto/create-product.dto';
-import { ProductFiltersDto } from './dto/product-filters.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { TypeORMProductsRepository } from '../repositories/typeorm-products.repository';
+import { ProductResponseDto } from '../dto/product-response.dto';
+import { CreateProductDto } from '../dto/create-product.dto';
+import { ProductFiltersDto } from '../dto/product-filters.dto';
+import { UpdateProductDto } from '../dto/update-product.dto';
 import { MinioSimpleService } from './minio.service';
 
 @Injectable()

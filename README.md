@@ -298,8 +298,7 @@ MINIO_BUCKET=bmstu-bucket
 MINIO_USE_SSL=false
 ```
 
-
-### 6.2 Конфигурация TypeORM в `app.module.ts`
+### 5 Конфигурация TypeORM в `app.module.ts`
 
 **AppModule** — это главный модуль приложения, где собираются и настраиваются все компоненты (база данных, конфигурация, бизнес-логика). Он подключает TypeORM к PostgreSQL, используя параметры из .env-файла, чтобы пароли и настройки не хранились в коде.
 
@@ -340,7 +339,7 @@ export class AppModule {}
 ```
 
 
-## 7. Создание сущностей (Entity)
+## 6. Создание сущностей (Entity)
 
  После настройки TypeORM нужно создать сущности (entities) — это TypeScript-классы, которые описывают таблицы в базе данных. Каждая сущность соответствует одной таблице, а её свойства — колонкам. Создадим сущность product со следующими атрибутами:
 - **id** — уникальный идентификатор (автоинкремент)
@@ -422,7 +421,7 @@ export class ProductEntity {
 | `@UpdateDateColumn()` | Автоматически обновляемая дата изменения | `@UpdateDateColumn()` |
 
 
-## 9. Реализация репозитория для работы с БД
+## 7. Реализация репозитория для работы с БД
 
 Репозиторий — это прослойка между сервисом и базой, которая умеет выполнять CRUD-запросы к конкретной таблице (например, products).
 
@@ -456,7 +455,7 @@ export class TypeORMProductsRepository {
 
 ---
 
-## 10. DTO. Сервис с бизнес-логикой
+## 8. DTO. Сервис с бизнес-логикой
 
 По заданию при GET запросе, мы не должны видеть удаленные продукты. Для этого реализуем DTO.
 DTO (Data Transfer Object) — это классы для передачи данных между клиентом и сервером.
@@ -483,7 +482,7 @@ export class ProductResponseDto {
 ```
 **Файл `products.service.ts` — это бизнес-логика приложения.** Здесь пишут всю работу с данными: фильтрацию, преобразование сущностей в DTO, проверки, расчеты. Это посредник между контроллером (получает запрос) и репозиторием (работает с базой).
 
-**Файл:** `src/modules/products/products.service.ts`
+**Файл:** `src/modules/products/services/products.service.ts`
 
 ```typescript
 import { Injectable } from '@nestjs/common';
@@ -509,15 +508,15 @@ async findAll(): Promise<ProductResponseDto[]> {
 ```
 
 
-## 11. Контроллер и REST API маршруты
+## 9. Контроллер и REST API маршруты
 
 Контроллер (controller) — это точка входа для HTTP-запросов. Он принимает запрос от клиента, вызывает сервис для обработки и возвращает ответ.
 
-**Файл:** `src/modules/products/products.controller.ts`
+**Файл:** `src/modules/products/controllers/products.controller.ts`
 
 ```typescript
 import { Controller, Get } from '@nestjs/common';
-import { ProductsService } from './products.service';
+import { ProductsService } from './services/products.service';
 import { ProductResponseDto } from './dto/product-response.dto';
 
 @Controller('products')
@@ -536,7 +535,7 @@ export class ProductsController {
 3. Вызывает `productsService.findAll()` для получения данных
 4. Возвращает DTO-объекты клиенту
 
-## 11. Модуль ProductsModule
+## 10. Модуль ProductsModule
 
 **Модуль `ProductsModule` собирает всё вместе.** Он регистрирует:
 - `ProductEntity` для TypeORM
@@ -552,8 +551,8 @@ export class ProductsController {
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductEntity } from '../../entities/product.entity';
-import { ProductsController } from './products.controller';
-import { ProductsService } from './products.service';
+import { ProductsController } from './controllers/products.controller';
+import { ProductsService } from './services/products.service';
 import { TypeORMProductsRepository } from './repositories/typeorm-products.repository';
 
 @Module({
@@ -570,9 +569,9 @@ export class ProductsModule {}
 
 ---
 
-## 12. Валидация и глобальные пайпы
+## 11. Валидация и глобальные пайпы
 
-### 12.1 Настройка глобальной валидации в `main.ts`
+### 11.1 Настройка глобальной валидации в `main.ts`
 
 ```typescript
 import { NestFactory } from '@nestjs/core';
@@ -600,7 +599,7 @@ async function bootstrap() {
 bootstrap();
 ```
 
-### 12.2 Параметры ValidationPipe:
+### 11.2 Параметры ValidationPipe:
 
 | Параметр | Значение по умолчанию | Описание |
 |----------|----------------------|----------|
@@ -612,7 +611,7 @@ bootstrap();
 ---
 
 
-## 14. Тестирование GET в Postman
+## 12. Тестирование GET в Postman
 1. Поднимете docker контейнер командой docker compose up
 
 
@@ -625,7 +624,7 @@ bootstrap();
 
 Отлично! Вы сделали первый REST IP запрос! Теперь давайте реализуем POST запрос.
 
-## 14. POST запрос.
+## 13. POST запрос.
 
 Создайте dto для POST запроса. Добавьте сюда немного логики обработки ошибок, например цена не может быть отрицательной.
 **Файл:** `src/modules/products/dto/create-product.dto.ts`
@@ -681,7 +680,7 @@ export class CreateProductDto {
   return await this.repository.save(product);
   }
 ```
-В **файле:** `src/modules/products/products.service.ts` сделайте импорт
+В **файле:** `src/modules/products/services/products.service.ts` сделайте импорт
 ```typescript
 import { CreateProductDto } from './dto/create-product.dto';
 ```
@@ -699,7 +698,7 @@ async create(createProductDto: CreateProductDto): Promise<ProductResponseDto> {
 }
 ```
 
-В **файле:** `src/modules/products/products.controller.ts` сделайте импорт
+В **файле:** `src/modules/products/controllers/products.controller.ts` сделайте импорт
 ```typescript
 import { CreateProductDto } from './dto/create-product.dto';
 ```
@@ -836,7 +835,7 @@ export class TypeORMProductsRepository {
   }
 }
 ```
-В **файле:** `src/modules/products/products.service.ts` сделайте импорт
+В **файле:** `src/modules/products/services/products.service.ts` сделайте импорт
 
 ```typescript
 import { Injectable, NotFoundException } from '@nestjs/common';
@@ -891,7 +890,7 @@ export class ProductsService {
 }
 
 ```
-В **файле:** `src/modules/products/products.controller.ts` сделайте новые импорты и добавьте методы.
+В **файле:** `src/modules/products/controllers/products.controller.ts` сделайте новые импорты и добавьте методы.
 ```typescript
 import {
   Controller,
@@ -902,7 +901,7 @@ import {
   Query,
   ParseIntPipe,
 } from '@nestjs/common';
-import { ProductsService } from './products.service';
+import { ProductsService } from './services/products.service';
 import { ProductResponseDto } from './dto/product-response.dto';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ProductFiltersDto } from './dto/product-filters.dto';
@@ -1012,7 +1011,7 @@ export class UpdateProductDto {
   }
 ```
 
-В **файле:** `src/modules/products/products.service.ts` сделайте импорт
+В **файле:** `src/modules/products/services/products.service.ts` сделайте импорт
 ```typescript
 import { Injectable, NotFoundException, BadRequestException, } from '@nestjs/common';
 import { UpdateProductDto } from './dto/update-product.dto';
@@ -1055,7 +1054,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
     await this.productsRepository.softDelete(id);
   }
 ```
-В **файле:** `src/modules/products/products.controller.ts` сделайте новые импорты и добавьте методы. Итоговый файл выглядит так:
+В **файле:** `src/modules/products/controllers/products.controller.ts` сделайте новые импорты и добавьте методы. Итоговый файл выглядит так:
 
 ```typescript
 import {
@@ -1069,7 +1068,7 @@ import {
   Query,
   ParseIntPipe,
 } from '@nestjs/common';
-import { ProductsService } from './products.service';
+import { ProductsService } from './services/products.service';
 import { ProductResponseDto } from './dto/product-response.dto';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ProductFiltersDto } from './dto/product-filters.dto';
@@ -1144,7 +1143,7 @@ npm install multer
 npm install -D @types/multer
 ```
 Создадим простой MinIo сервис 
-**файл:** `rc/modules/products/minio.service.ts`
+**файл:** `rc/modules/products/services/minio.service.ts`
 
 ```typescript
 import { Injectable } from '@nestjs/common';
@@ -1253,7 +1252,7 @@ export class ProductResponseDto {
   imageUrl?: string;
   
 ```
-В **файле:** `src/modules/products/products.service.ts` добавьте новую реализацию методов:
+В **файле:** `src/modules/products/services/products.service.ts` добавьте новую реализацию методов:
 ```typescript
 import { Injectable, NotFoundException, BadRequestException, InternalServerErrorException } from '@nestjs/common';
 import { TypeORMProductsRepository } from './repositories/typeorm-products.repository';
@@ -1261,7 +1260,7 @@ import { ProductResponseDto } from './dto/product-response.dto';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ProductFiltersDto } from './dto/product-filters.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { MinioSimpleService } from './minio.service';
+import { MinioSimpleService } from './services/minio.service';
 
 @Injectable()
 export class ProductsService {
@@ -1488,7 +1487,7 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
-import { ProductsService } from './products.service';
+import { ProductsService } from './services/products.service';
 import { ProductResponseDto } from './dto/product-response.dto';
 import { CreateProductDto } from './dto/create-product.dto';
 import { ProductFiltersDto } from './dto/product-filters.dto';
@@ -1570,10 +1569,10 @@ export class ProductsController {
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductEntity } from '../../entities/product.entity';
-import { ProductsController } from './products.controller';
-import { ProductsService } from './products.service';
+import { ProductsController } from './controllers/products.controller';
+import { ProductsService } from './services/products.service';
 import { TypeORMProductsRepository } from './repositories/typeorm-products.repository';
-import { MinioSimpleService } from './minio.service'; // Добавьте этот импорт
+import { MinioSimpleService } from './services/minio.service'; // Добавьте этот импорт
 
 @Module({
   imports: [TypeOrmModule.forFeature([ProductEntity])],
@@ -1599,3 +1598,30 @@ Body:
     Тип: File (не Text!)
 
     Нажмите "Select Files" и выберите любое изображение (jpg, png и т.д.)
+
+## 16. Итоговая структура проекта
+
+bmstu-lab/
+├── src/
+│   ├── entities/
+│   │   └── product.entity.ts
+│   ├── modules/
+│   │   └── products/
+│   │       ├── controllers/
+│   │       │   └── products.controller.ts
+│   │       ├── services/
+│   │       │   └── products.service.ts
+│   │       │   └── minio.service.ts
+│   │       ├── repositories/
+│   │       │   └── typeorm-products.repository.ts
+│   │       ├── dto/
+│   │       │   ├── create-product.dto.ts
+│   │       │   ├── update-product.dto.ts
+│   │       │   ├── product-response.dto.ts
+│   │       │   └── product-filters.dto.ts
+│   │       └── products.module.ts
+│   ├── app.module.ts
+│   └── main.ts
+├── docker-compose.yml
+├── init.sql
+└── .env

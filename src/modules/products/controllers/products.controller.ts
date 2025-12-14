@@ -14,11 +14,11 @@ import {
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { memoryStorage } from 'multer';
-import { ProductsService } from './products.service';
-import { ProductResponseDto } from './dto/product-response.dto';
-import { CreateProductDto } from './dto/create-product.dto';
-import { ProductFiltersDto } from './dto/product-filters.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { ProductsService } from '../services/products.service';
+import { ProductResponseDto } from '../dto/product-response.dto';
+import { CreateProductDto } from '../dto/create-product.dto';
+import { ProductFiltersDto } from '../dto/product-filters.dto';
+import { UpdateProductDto } from '../dto/update-product.dto';
 
 @Controller('products')
 export class ProductsController {
