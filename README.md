@@ -20,7 +20,8 @@
 14. [GET запрос одной услуги и фильтры](#GET-запрос-одной-услуги-и-фильтры)
 15. [PUT и DELETE запросы](#PUT-и-DELETE-запросы)
 16. [MinIo](#MinIo)
-17. [Итоговая структура проекта](#Итоговая-структура-проекта)
+17. [Итоговая структура проекта](#итоговая-структура-проекта)
+18. [Полезные ссылки](#полезные-ссылки)
 
 ---
 
@@ -79,6 +80,7 @@
 4. **Единообразие интерфейса** — стандартные HTTP-методы и форматы данных
 5. **Слоистая система** — система может состоять из нескольких слоев
 
+---
 ### 2.3 HTTP-методы в REST API:
 
 | Метод   | Описание                     | Пример использования           |
@@ -88,6 +90,8 @@
 | **PUT**    | Полное обновление ресурса    | `PUT /api/products/1`          |
 | **DELETE** | Удаление ресурса             | `DELETE /api/products/1`       |
 | **PATCH**  | Частичное обновление ресурса | `PATCH /api/products/1`        |
+
+---
 
 ### 2.4 Форматы данных
 В REST API данные передаются в формате **JSON** (JavaScript Object Notation):
@@ -140,6 +144,7 @@ npm install -g @nestjs/cli
 # Проверка установки
 nest --version
 ```
+---
 
 ### 4.2 Создание нового проекта
 
@@ -156,6 +161,7 @@ nest new bmstu-lab
 # Переход в папку проекта
 cd bmstu-lab
 ```
+---
 
 ### 4.3 Установка необходимых зависимостей
 
@@ -167,6 +173,7 @@ npm install class-validator class-transformer
 # Разработческие зависимости
 npm install --save-dev @types/node
 ```
+---
 
 ### 4.4 Настройка Docker для PostgreSQL, MinIo
 
@@ -178,9 +185,10 @@ npm install --save-dev @types/node
 
 Создайте файл docker-compose.yml в корневой директории проекта. Этот файл содержит конфигурацию для одновременного запуска всех необходимых сервисов.
 
-Важно: порты на вашем компьютере могут быть заняты другими приложениями. Если при запуске возникают ошибки связанные с портами — измените их в конфигурации.
+**Важно**: порты на вашем компьютере могут быть заняты другими приложениями. Если при запуске возникают ошибки связанные с портами — измените их в конфигурации.
 
 Пример:
+
 По умолчанию PostgreSQL использует порт 5432:5432. Если он занят, измените конфигурацию на 5439:5432. В этом случае:
 
     Внутри контейнера PostgreSQL останется на порту 5432
@@ -188,6 +196,7 @@ npm install --save-dev @types/node
     На вашем компьютере база будет доступна по порту 5439
 
 Аналогично можно настроить порты для MinIO и других сервисов.
+
 ```yaml
 version: '3.8'
 
@@ -252,7 +261,6 @@ networks:
 Заполним БД любым удобным для вас способом, например с помощью PgAdmin:
 
 ```sql
--- Создание таблицы товаров
 CREATE TABLE IF NOT EXISTS products (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
@@ -265,8 +273,6 @@ CREATE TABLE IF NOT EXISTS products (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
-
--- Вставка тестовых данных
 INSERT INTO products (name, description, price, category, stock_quantity) VALUES
     ('Ноутбук ASUS VivoBook', '15.6 дюймов, Intel Core i5, 8GB RAM, 512GB SSD', 54999, 'Электроника', 10),
     ('Смартфон Xiaomi Redmi Note', '6.7" AMOLED, 128GB, 5000mAh', 19999, 'Электроника', 15),
@@ -298,6 +304,7 @@ MINIO_SECRET_KEY=minioadmin
 MINIO_BUCKET=bmstu-bucket
 MINIO_USE_SSL=false
 ```
+---
 
 ### 5 Конфигурация TypeORM в `app.module.ts`
 
@@ -338,7 +345,7 @@ import { ProductsModule } from './modules/products/products.module';
 })
 export class AppModule {}
 ```
-
+---
 
 ## 6. Создание сущностей (Entity)
 
@@ -421,6 +428,7 @@ export class ProductEntity {
 | `@CreateDateColumn()` | Автоматически заполняемая дата создания | `@CreateDateColumn()` |
 | `@UpdateDateColumn()` | Автоматически обновляемая дата изменения | `@UpdateDateColumn()` |
 
+---
 
 ## 7. Реализация репозитория для работы с БД
 
@@ -507,7 +515,7 @@ async findAll(): Promise<ProductResponseDto[]> {
 }
 }
 ```
-
+---
 
 ## 9. Контроллер и REST API маршруты
 
@@ -530,11 +538,15 @@ export class ProductsController {
   }
 }
 ```
+---
+
 ### Что делает этот контроллер:
 1. `@Controller('products')` — слушает запросы по пути `/products`
 2. `@Get()` — обрабатывает GET-запрос на `/products`
 3. Вызывает `productsService.findAll()` для получения данных
 4. Возвращает DTO-объекты клиенту
+
+---
 
 ## 10. Модуль ProductsModule
 
@@ -599,6 +611,7 @@ async function bootstrap() {
 }
 bootstrap();
 ```
+---
 
 ### 11.2 Параметры ValidationPipe:
 
@@ -614,16 +627,27 @@ bootstrap();
 
 ## 12. Тестирование GET в Postman
 1. Поднимете docker контейнер командой docker compose up
+
    ![](https://github.com/thePontific/Method-lab3/blob/main/images/1.png)
 
 2. Проверьте, что PostgreSQL и MinIo в состоянии listening
 3. Запустите ваш проект: npm run start:dev
 
+    ![](https://github.com/thePontific/Method-lab3/blob/main/images/2.png)
+
 4. Скачайте Postman с официального сайта: https://www.postman.com/downloads/
 5. Установите и откройте приложение
-6. Создайте новый GET запрос: http://localhost:3000/api/products
+6. Создайте новый GET запрос: 
+
+```text
+http://localhost:3000/api/products
+```
+
+    ![](https://github.com/thePontific/Method-lab3/blob/main/images/3.png)
 
 Отлично! Вы сделали первый REST IP запрос! Теперь давайте реализуем POST запрос.
+
+---
 
 ## 13. POST запрос
 
@@ -671,7 +695,7 @@ export class CreateProductDto {
 }
 
 ```
-В репозиторий также добавим метод POST
+В репозиторий также добавим метод POST:
 
 **Файл:** `src/modules/products/repositories/typeorm-products.repository.ts`
 
@@ -714,8 +738,10 @@ import { CreateProductDto } from './dto/create-product.dto';
   }
 ```
 
-Снова запустите код приложения и сделайте пост запрос в Postman
+Снова запустите код приложения и сделайте пост запрос в Postman:
+```text
 http://localhost:3000/api/products
+```
 Тело json:
 ```json
 {
@@ -726,6 +752,11 @@ http://localhost:3000/api/products
   "stockQuantity": 10
 }
 ```
+
+![](https://github.com/thePontific/Method-lab3/blob/main/images/4.png)
+
+---
+
 ## 14. GET запрос одной услуги и фильтры
 
 Чтобы было удобнее отслеживать услуги и сортировать, необходимо добавить вызов одной услуги, а также фильтры на вызов всех услуг. Давайте это реализуем.
@@ -935,8 +966,22 @@ export class ProductsController {
 ```
 Отлично! Давайте запустим проект и проверим новые запросы.
 
-1. GET фильтр http://localhost:3000/api/products?category=Электроника&inStock=true&minPrice=1000&maxPrice=25000&search=test
-2. GET 1 услуги http://localhost:3000/api/products/2
+1. GET фильтр:
+```text
+ http://localhost:3000/api/products?category=Электроника&inStock=true&minPrice=1000&maxPrice=25000&search=test
+ ```
+
+![](https://github.com/thePontific/Method-lab3/blob/main/images/7.png)
+
+2. GET 1 услуги:
+
+```text
+http://localhost:3000/api/products/2
+```
+
+![](https://github.com/thePontific/Method-lab3/blob/main/images/6.png)
+
+---
 
 ## 15. PUT и DELETE запросы
 
@@ -1122,7 +1167,12 @@ async deleteProduct(
 
 ```
 
-1. Проверим PUT запрос. http://localhost:3000/api/products/6
+1. Проверим PUT запрос:
+
+```text
+http://localhost:3000/api/products/6
+```
+
 ```json
 {
   "name": "Ноутбук Asus",
@@ -1130,20 +1180,43 @@ async deleteProduct(
   "stockQuantity": 8
 }
 ```
-2. Проверим DELETE запрос. http://localhost:3000/api/products/1
 
-Отлично! Мы реализовали основные запросы необходимые для сервиса. Остальные запросы буду писаться аналогично, просто выполняться с другими сущностями и с другой бизнес-логикой.
+![](https://github.com/thePontific/Method-lab3/blob/main/images/8.png)
+
+Проверим что услуга действительно изменилась:
+
+![](https://github.com/thePontific/Method-lab3/blob/main/images/9.png)
+
+
+2. Проверим DELETE запрос:
+
+```text
+http://localhost:3000/api/products/1
+```
+
+![](https://github.com/thePontific/Method-lab3/blob/main/images/10.png)
+
+Проверим что услуга действительно удалилась:
+
+![](https://github.com/thePontific/Method-lab3/blob/main/images/11.png)
+
+Отлично! Мы реализовали основные запросы необходимые для сервиса. Остальные запросы буду делаться аналогично, просто выполняться с другими сущностями и с другой бизнес-логикой.
+
+---
 
 ## 16. MinIo
 
 Напоследок, давайте реализуем сервис связанный с картинками.
 POST добавление изображения. Добавление изображения по id услуги, старое изображение заменяется/удаляется. minio только в этом методе и удалении! Название изображение генерируется на латинице.
+
+Установим зависимости:
+
 ```bash
 npm install minio
 npm install multer
 npm install -D @types/multer
 ```
-Создадим простой MinIo сервис 
+Создадим простой MinIo сервис
 **файл:** `rc/modules/products/services/minio.service.ts`
 
 ```typescript
@@ -1231,7 +1304,7 @@ export class MinioSimpleService {
   }
 }
 ```
-Обновим **файл:** `dto/product-response.dto.ts`
+Обновим **файл:** `dto/product-response.dto.ts`:
 ```typescript
 // dto/product-response.dto.ts
 export class ProductResponseDto {
@@ -1589,16 +1662,23 @@ export class ProductsModule {}
 ```
 
 Теперь попробуем протестировать наш POST метод
+
+```text
 http://localhost:3000/api/products/2/image
+```
 Body:
+1. Выберите form-data
+2. Добавьте ключ: image
+3.  Тип: File (не Text!)
+4.  Нажмите "Select Files" и выберите любое изображение (jpg, png и т.д.)
 
-    Выберите form-data
+![](https://github.com/thePontific/Method-lab3/blob/main/images/12.png)
 
-    Добавьте ключ: image
+Отлично! Проверим открывается ли само изображение:
 
-    Тип: File (не Text!)
+![](https://github.com/thePontific/Method-lab3/blob/main/images/13.png)
 
-    Нажмите "Select Files" и выберите любое изображение (jpg, png и т.д.)
+---
 
 ## 17. Итоговая структура проекта
 ```text
@@ -1627,3 +1707,28 @@ bmstu-lab/
 ├── init.sql
 └── .env
 ```
+
+---
+
+## 18. Полезные ссылки
+
+### Официальная документация
+1. **NestJS**
+   - [Официальная документация NestJS](https://docs.nestjs.com/)
+   - [Основы NestJS](https://docs.nestjs.com/first-steps)
+   - [Техники работы с базой данных](https://docs.nestjs.com/techniques/database)
+   - [Валидация](https://docs.nestjs.com/techniques/validation)
+
+2. **TypeORM**
+   - [Документация TypeORM](https://typeorm.io/)
+   - [Сущности и декораторы](https://typeorm.io/entities)
+   - [Миграции](https://typeorm.io/migrations)
+
+3. **PostgreSQL**
+   - [Официальная документация](https://www.postgresql.org/docs/)
+   - [Руководство по установке](https://www.postgresql.org/download/)
+
+4. **MinIO**
+   - [Документация MinIO](https://min.io/docs/minio/linux/index.html)
+
+---
